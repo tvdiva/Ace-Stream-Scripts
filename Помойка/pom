@@ -1,0 +1,37 @@
+#! /bin/bash
+
+GetFile (){
+  local URL="http://f27uk3gyl2gfu4z36eifv4ob73w6xgrcms4w4vdxzcsxsobgc766ityd.onion/trash/ttv-list/$1"
+  curl -s --socks5-hostname 192.168.1.2:9050 --compressed --connect-timeout 30 --max-time 50 --fail -R -z "${PlayListFolder}/pom/$1" -o "${PlayListFolder}/pom/$1" "${URL}"
+  if [ $? -eq 0 ]
+        then
+          cp "${PlayListFolder}/pom/$1" "${PlayListFolder}/pom/${NowDate}-$(basename $1)"
+# Замена 192.168.2.1:82 на 192.168.1.2:8000
+# Замена stream.mp4 на stream.ts
+# Удаление от ' [' до конца строки - убирает указатель языка и рубрики
+# Удаление от ' (' до конца строки - убирает указатель рубрики (если не было указателя языка)
+          cat "${PlayListFolder}/pom/$1" | sed -r 's/192.168.2.1:82/192.168.1.2:8000/g' | sed -r 's/stream.mp4/stream.ts/g' | sed -r 's/ \[.+//' | sed -r 's/ \(.+//' > "${PlayListFolder}/$(basename $1)"
+        fi
+  }
+
+UnpackFile (){
+  tar -xOf ${ArchLocal} "$1" | sed -r 's/192.168.2.1:82/192.168.1.2:8000/g' | sed -r 's/stream.mp4/stream.ts/g' | sed -r 's/ \[.+//' | sed -r 's/ \(.+//' > "${PlayListFolder}/$1"
+  }
+
+NowDate=$(date +%y%m%d)
+PlayListFolder="/mnt/storage/capture/.bin/AS"
+# Весь архив
+Arch="all_lists.tar.xz"
+ArchLocal="${PlayListFolder}/pom/$Arch"
+curl -s --socks5-hostname 192.168.1.2:9050 --connect-timeout 30 --max-time 50 --fail -R -z "${ArchLocal}" -o "${ArchLocal}" "http://f27uk3gyl2gfu4z36eifv4ob73w6xgrcms4w4vdxzcsxsobgc766ityd.onion/trash/ttv-list/${Arch}"
+cp "${ArchLocal}" "${PlayListFolder}/pom/$NowDate-$Arch"
+
+# GetFile ace.all.proxy.m3u
+# GetFile as.all.proxy.m3u
+# GetFile ace.movies.proxy.m3u
+
+UnpackFile ace.movies.proxy.m3u
+UnpackFile ace.educational.proxy.m3u
+
+# Удаляет файлы старше 100 дней
+find "$PlayListFolder/pom/" -type f -mtime +100 -delete
