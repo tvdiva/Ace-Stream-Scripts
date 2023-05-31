@@ -1,4 +1,0 @@
-#!/bin/sh
-# https://hub.docker.com/r/rusanter/acestream-proxy
-docker run -d -p 6878:6878 -p 8000:8000 -v /mnt/storage/AceFilms:/mnt/films --name AS --restart=always rusanter/acestream-proxy
-docker ps
