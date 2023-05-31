@@ -2,20 +2,18 @@
 
 if [[ $# < 1 ]]
   then
-        echo -e "Не указаны параметры запуска.\nget-torrent-id <Торрент файл .torrent> [Произвольное имя]\n"
+        echo -e "Не указаны параметры запуска.\nget-torrent-id <http[s] ссылка на торрент файл> [Произвольное имя]\n"
         exit
   fi
 
-if [[ -e "$1" ]]
+TempTorrentFile=$(mktemp)
+curl -s "$1" -o $TempTorrentFile
+Id=$(transmission-show "${TempTorrentFile}" | grep Hash | awk '{print $2}')
+Name=$(transmission-show "${TempTorrentFile}" | grep Name | head -n 1 | awk '{print $2}')
+if [[ $2 != "" ]]
   then
-        Id=$(transmission-show "$1" | grep Hash | awk '{print $2}')
-        Name=$(transmission-show "$1" | grep Name | head -n 1 | awk '{print $2}')
-        if [[ $2 != "" ]]
-          then
-                Name="$2"
-          fi
-        echo "#EXTINF:-1,$Name"
-        echo "http://192.168.1.2:8000/infohash/$Id/0/stream.mp4"
-  else
-        echo "Торрент файл не существует."
+        Name="$2"
   fi
+echo "#EXTINF:-1,$Name"
+echo "http://192.168.1.2:8000/infohash/$Id/0/stream.mp4"
+rm ${TempTorrentFile}
