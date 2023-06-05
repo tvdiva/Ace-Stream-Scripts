@@ -19,19 +19,20 @@ UnpackFile (){
   }
 
 NowDate=$(date +%y%m%d)
-PlayListFolder="/mnt/storage/capture/.bin/AS"
+PlayListFolder="/mnt/storage/bin/as"
 # Весь архив
 Arch="all_lists.tar.xz"
 ArchLocal="${PlayListFolder}/pom/$Arch"
 curl -s --socks5-hostname 192.168.1.2:9050 --connect-timeout 30 --max-time 50 --fail -R -z "${ArchLocal}" -o "${ArchLocal}" "http://f27uk3gyl2gfu4z36eifv4ob73w6xgrcms4w4vdxzcsxsobgc766ityd.onion/trash/ttv-list/${Arch}"
 cp "${ArchLocal}" "${PlayListFolder}/pom/$NowDate-$Arch"
 
-# GetFile ace.all.proxy.m3u
-# GetFile as.all.proxy.m3u
 # GetFile ace.movies.proxy.m3u
+# GetFile as.movies.proxy.m3u
+# GetFile ace.educational.proxy.m3u
 
 UnpackFile ace.movies.proxy.m3u
 UnpackFile ace.educational.proxy.m3u
+UnpackFile as.informational.proxy.m3u
 
 # Удаляет файлы старше 100 дней
 find "$PlayListFolder/pom/" -type f -mtime +100 -delete
