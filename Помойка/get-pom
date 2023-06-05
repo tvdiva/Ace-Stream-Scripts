@@ -1,5 +1,7 @@
 #! /bin/bash
 
+# Запускается из cron раз в сутки
+
 GetFile (){
   local URL="http://f27uk3gyl2gfu4z36eifv4ob73w6xgrcms4w4vdxzcsxsobgc766ityd.onion/trash/ttv-list/$1"
   curl -s --socks5-hostname 192.168.1.2:9050 --compressed --connect-timeout 30 --max-time 50 --fail -R -z "${PlayListFolder}/pom/$1" -o "${PlayListFolder}/pom/$1" "${URL}"
