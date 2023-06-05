@@ -27,3 +27,9 @@ get-torrent-id "http://d.rutor.info/download/926965" "Дознание пило�
 #EXTINF:-1,Дознание пилота Пиркса [1979, BDRip, 1080p]
 http://192.168.1.2:8000/infohash/5e2f4dd981f06062bae9832b6e3bb196556ccc6f/0/stream.mp4
 ```
+
+## Пример ace.movies.proxy.m3u в портале https://ottplayer.tv
+
+Для просмотра не телевизоре, используется [MAG322](https://www.infomir.eu/rus/products/archive/mag322/), на компьютере - самописный TV плеер.
+
+[![](https://i.ibb.co/C9Zj4yy/OTTPlayer.png)](https://i.ibb.co/kDfLzTT/OTTPlayer.png)
