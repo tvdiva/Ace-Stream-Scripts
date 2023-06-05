@@ -1,0 +1,60 @@
+#! /bin/bash
+
+# Запускается из cron три раза в сутки
+
+Now(){
+  date +"%d.%m.%Y %H:%M:%S"
+  }
+
+Channels(){
+  cat "$1" | grep "#EXTINF" | while read line;do
+        ch_id=$(echo $line | awk -F 'tvg-id="' '{print $2}' | awk -F '"' '{print $1}')
+        if [[ -n $ch_id ]];then cat "$EpgFile" | grep "$2=\"$ch_id\">" >> "$MyEpg";fi
+        done
+  }
+
+AddM3uTags(){
+  echo "#EXTM3U" > "$2"
+  grep '#EXTINF' "$1" | while read Line;do
+        Name=$(echo "$Line" | grep '#EXTINF' | awk -F ',' '{print $2}' | sed -r 's/ \[.+//')
+        URL=$(grep -w "$Name" -A 1 "$1" | tail -n 1)
+        TVG=$(cat "$EpgFile" | grep "<channel id=" | grep -i -w "$Name" | head -n 1 | awk -F '<channel id="' '{print $2}' | awk -F '"' '{print $1}')
+        if [[ -n "$TVG" ]];then TVG=" tvg-id=\"$TVG\"";fi
+        echo -e "#EXTINF:-1""$TVG"",""$Name""\n""$URL" >> "$2"
+        done
+  }
+
+WorkDir="/mnt/storage/bin/epg"
+ArcFile="$WorkDir/epg_lite.xml.gz"
+EpgFile="$WorkDir/epg_lite.xml"
+MyEpg="$WorkDir/epg.xml"
+Log="$WorkDir/$(basename $0).log"
+Dat="$WorkDir/$(basename $0).rc"
+AceMovies="$WorkDir/ace-movies.m3u"
+. $Dat
+
+echo "----------------------------------------- $(Now) -----------------------------------------" >> "$Log"
+curl --connect-timeout 30 --max-time 50 --fail -R -z "${ArcFile}" -o "${ArcFile}" "https://epgtut.tk/epg_lite.xml.gz" >> "$Log" 2>&1
+echo "Время файла $ArcFile - $(stat -c %y $ArcFile)" >> "$Log"
+ArcTimeCur=$(stat -c %Y $ArcFile)
+echo "ArcTimePrev=$ArcTimeCur" > "$Dat"
+if [[ "$ArcTimePrev" != "$ArcTimeCur" ]];then
+  echo "$(Now) Распаковка $ArcFile to $EpgFile" >> "$Log"
+  gzip -dc "$ArcFile" > "$EpgFile"
+  echo "$(Now) Формирование $AceMovies" >> "$Log"
+  AddM3uTags "/mnt/storage/bin/as/ace.movies.proxy.m3u" "$AceMovies"
+  echo "$(Now) Формирование собственного EPG файла $MyEpg" >> "$Log"
+
+  echo '<?xml version="1.0" encoding="utf-8"?>
+  <!DOCTYPE tv SYSTEM "https://iptvx.one/xmltv.dtd">
+  <tv generator-info-name="IptvX.one" generator-info-url="https://iptvx.one/">' > "$MyEpg"
+  Channels "tvok.m3u" "channel id"
+  Channels "ace-movies.m3u" "channel id"
+  Channels "tvok.m3u" "channel"
+  Channels "ace-movies.m3u" "channel"
+  echo "</tv>" >> "$MyEpg"
+
+  else
+        echo "$(Now) Файл $ArcFile без изменений. Действий не требуется" >> "$Log"
+  fi
+echo "$(Now) Скрипт завершён" >> "$Log"
