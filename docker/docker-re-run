@@ -1,2 +1,2 @@
 #!/bin/sh
-docker stop AS && docker rm AS && ./run
+docker stop AS && docker rm AS && ./docker-run
