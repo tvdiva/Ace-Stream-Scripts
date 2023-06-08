@@ -2,7 +2,7 @@
 Используемый docker образ - [Docker image for AceStream proxy with the AceStream Engine bundled](https://hub.docker.com/r/rusanter/acestream-proxy) ([GitHub](https://github.com/rusanter/acestream-docker))
 ```
 docker pull rusanter/acestream-proxy
-podman docker pull rusanter/acestream-proxy
+podman pull rusanter/acestream-proxy
 ```
 ## Скрипты
 
