@@ -32,4 +32,4 @@ http://192.168.1.2:8000/infohash/5e2f4dd981f06062bae9832b6e3bb196556ccc6f/0/stre
 
 Для просмотра не телевизоре, используется [MAG322](https://www.infomir.eu/rus/products/archive/mag322/), на компьютере - самописный TV плеер.
 
-[![](https://i.ibb.co/C9Zj4yy/OTTPlayer.png)](https://i.ibb.co/kDfLzTT/OTTPlayer.png)
+[![](https://i5.imageban.ru/out/2023/06/08/206c314f21153802fca14902d2ac2858.png)](https://i.ibb.co/kDfLzTT/OTTPlayer.png)
