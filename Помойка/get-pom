@@ -12,7 +12,7 @@ GetFile (){
 # Замена stream.mp4 на stream.ts
 # Удаление от ' [' до конца строки - убирает указатель языка и рубрики
 # Удаление от ' (' до конца строки - убирает указатель рубрики (если не было указателя языка)
-          cat "${PlayListFolder}/pom/$1" | sed -r 's/192.168.2.1:82/192.168.1.2:8000/g' | sed -r 's/stream.mp4/stream.ts/g' | sed -r 's/ \[.+//' | sed -r 's/ \(.+//' > "${PlayListFolder}/$(basename $1)"
+          sed -r 's/192.168.2.1:82/192.168.1.2:8000/g' "${PlayListFolder}/pom/$1" | sed -r 's/stream.mp4/stream.ts/g' | sed -r 's/ \[.+//' | sed -r 's/ \(.+//' > "${PlayListFolder}/$(basename $1)"
         fi
   }
 
