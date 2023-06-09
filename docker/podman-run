@@ -1,4 +1,5 @@
 #!/bin/sh
 # https://hub.docker.com/r/rusanter/acestream-proxy
-podman run -d -p 6878:6878 -p 8000:8000 -v /mnt/storage/AceFilms:/mnt/films --name AS --restart=always rusanter/acestream-proxy
+# Create sevice: podman generate systemd --new --name AS > /etc/systemd/system/as.service && systemctl daemon-reload
+podman run -d -p 6878:6878 -p 8000:8000 -v /mnt/storage/AceFilms:/mnt/films --name AS rusanter/acestream-proxy
 podman ps
