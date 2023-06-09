@@ -1,2 +1,0 @@
-#!/bin/sh
-podman stop AS && docker rm AS && ./podman-run
